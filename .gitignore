@@ -1,0 +1,4 @@
+# Ignore the secrets file
+telegram-send.conf
+# Ignore the archive directory
+archive/
