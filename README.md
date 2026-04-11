@@ -37,7 +37,7 @@ Telegram bot set up on your account and a group and topic created.
     ```
 
 2. **Configure:**
-Edit your .conf file and set you Telegram bot token and chat ID.
+Edit your .conf file and set your Telegram bot token and chat ID.
     ```bash
 	cp telegram-send.conf.example telegram-send.conf
 	nano telegram-send.conf
@@ -47,6 +47,6 @@ Edit your .conf file and set you Telegram bot token and chat ID.
 ## License ##
 This project is licensed under the MIT License - see the LICENSE file for details.
 	
-## Contributing and Thank You ##
+## Contributing ##
 
 If you find a bug please create an issue for it. Feel free to submit Pull Requests or open Issues if you find a bug or have ideas for new features!
