@@ -12,6 +12,7 @@ CONFIG_FILE="$SCRIPT_DIR/telegram-send.conf"
 # Check if the config file exists before trying to load it
 if [[ -f "$CONFIG_FILE" ]]; then
     # The dot (.) is the command for 'source'
+    # shellcheck disable=SC1090
     . "$CONFIG_FILE"
 else
     echo "ERROR: Configuration file $CONFIG_FILE not found!"
@@ -29,14 +30,19 @@ fi
 
 # Send to Telegram
 # Check if a topic was NOT provided
-if [ -z "TOPIC_ID" ]; then
-  curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
+if [ -z "$TOPIC_ID" ]; then
+  RESPONSE=$(curl --max-time 10 --connect-timeout 5 -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
        -d chat_id="$CHAT_ID" \
-       --data-urlencode text="$MESSAGE" > /dev/null
+       --data-urlencode text="$MESSAGE")
 else
-  curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
+  RESPONSE=$(curl --max-time 10 --connect-timeout 5 -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
        -d chat_id="$CHAT_ID" \
        -d message_thread_id="$TOPIC_ID" \
-       --data-urlencode text="$MESSAGE" > /dev/null
+       --data-urlencode text="$MESSAGE")
 fi
-echo "${SEND_CONFIRMATION_MESSAGE}"
+
+if [[ $RESPONSE == *"\"ok\":true"* ]]; then
+    echo "${SEND_CONFIRMATION_MESSAGE}"
+else
+    echo "Error sending Telegram message."
+fi

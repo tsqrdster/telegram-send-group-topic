@@ -12,6 +12,7 @@ CONFIG_FILE="$SCRIPT_DIR/telegram-send.conf"
 # Check if the config file exists before trying to load it
 if [[ -f "$CONFIG_FILE" ]]; then
     # The dot (.) is the command for 'source'
+    # shellcheck disable=SC1090
     . "$CONFIG_FILE"
 else
     echo "ERROR: Configuration file $CONFIG_FILE not found!"
@@ -31,7 +32,7 @@ fi
 # Build the exact URL
 URL="https://api.telegram.org/bot${TOKEN}/sendDocument"
 
-RESPONSE=$(curl -s -L \
+RESPONSE=$(curl --max-time 20 --connect-timeout 10 -s -L \
      -F "chat_id=${CHAT_ID}" \
      -F "message_thread_id=${TOPIC_ID}" \
      -F "document=@${FILE_PATH}" \
@@ -40,7 +41,7 @@ RESPONSE=$(curl -s -L \
      "${URL}")
 
 if [[ $RESPONSE == *"\"ok\":true"* ]]; then
-    echo "Telegram file sent successfully!"
+    echo "${SEND_CONFIRMATION_MESSAGE}"
 else
     echo "Error sending Telegram file: $RESPONSE"
 fi
